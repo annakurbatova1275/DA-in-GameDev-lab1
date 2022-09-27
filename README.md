@@ -170,48 +170,37 @@ plt.plot(x, prediction)
 ![image](https://user-images.githubusercontent.com/86403364/192510580-59814ad1-e4c8-4371-be55-122c9b6b0903.png)
 
 
-
-
 ## Задание 3
-### Какова роль параметра Lr? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ. В качестве эксперимента можете изменить значение параметра.
+### Ответы на вопросы после изучения кода на Python
 
-- Перечисленные в этом туториале действия могут быть выполнены запуском на исполнение скрипт-файла, доступного [в репозитории](https://github.com/Den1sovDm1triy/hfss-scripting/blob/main/ScreatingSphereInAEDT.py).
-- Для запуска скрипт-файла откройте Ansys Electronics Desktop. Перейдите во вкладку [Automation] - [Run Script] - [Выберите файл с именем ScreatingSphereInAEDT.py из репозитория].
+- Должна ли величина loss стремиться к нулю при изменении исходных данных?
 
-```py
+С каждым увеличением количества итераций, переменная loss уменьшалась. (третий столбец)
 
-import ScriptEnv
-ScriptEnv.Initialize("Ansoft.ElectronicsDesktop")
-oDesktop.RestoreWindow()
-oProject = oDesktop.NewProject()
-oProject.Rename("C:/Users/denisov.dv/Documents/Ansoft/SphereDIffraction.aedt", True)
-oProject.InsertDesign("HFSS", "HFSSDesign1", "HFSS Terminal Network", "")
-oDesign = oProject.SetActiveDesign("HFSSDesign1")
-oEditor = oDesign.SetActiveEditor("3D Modeler")
-oEditor.CreateSphere(
-	[
-		"NAME:SphereParameters",
-		"XCenter:="		, "0mm",
-		"YCenter:="		, "0mm",
-		"ZCenter:="		, "0mm",
-		"Radius:="		, "1.0770329614269mm"
-	], 
-)
+![image](https://user-images.githubusercontent.com/86403364/192516618-5198338c-2aa6-42c5-b7bc-475a8eb79dd2.png)
 
-```
+- Какова роль параметра Lr?
+
+Оптимизация данных к наименьшей погрешности. При изменении переменной можно заметить, как при увеличении данные больше расходятся, а при уменьшении - сходятся
+
+При 0.001
+
+![image](https://user-images.githubusercontent.com/86403364/192519181-bc9c3937-6223-4e96-bf90-31c31a769884.png)
+
+
+При 0.0001
+
+![image](https://user-images.githubusercontent.com/86403364/192519264-5526906d-e865-416c-b2c7-3515aeb49e8f.png)
+
+При 0.000000001
+
+![image](https://user-images.githubusercontent.com/86403364/192519484-07c4f905-a7d0-405d-a614-3c550f5f1928.png)
+
+
 
 ## Выводы
 
-Абзац умных слов о том, что было сделано и что было узнано.
-
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+Мне удалось примерно ознакомиться с некоторыми основными операторами языка Python на примере реализации линейной регрессии.
 
 ## Powered by
 
