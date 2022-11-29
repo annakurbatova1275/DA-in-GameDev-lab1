@@ -60,13 +60,90 @@
 
 ![image](https://user-images.githubusercontent.com/86403364/204554346-30564ba1-fda2-4a82-8eca-1f553a56da02.png)
 
-6. Добавление пакетов ML Agents в Unity:
+####Unity
+1. Добавление пакетов ML Agents в Unity:
 
 ![image](https://user-images.githubusercontent.com/86403364/204557577-6a07371a-240d-45fe-9cb4-87a948daaacb.png)
 
-7. 
+2. Создание сценки в Unity
+
+![image](https://user-images.githubusercontent.com/86403364/204561593-f001e1ca-f5d7-4f8e-892b-a902550287c7.png)
+
+3. Скрипт на C# для работы с ML Agents и перемещения фигур
+
+```cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
+
+public class RollerAgent : Agent
+{
+    Rigidbody rBody;
+    // Start is called before the first frame update
+    void Start()
+    {
+        rBody = GetComponent<Rigidbody>();
+    }
+
+    public Transform Target;
+    public override void OnEpisodeBegin()
+    {
+        if (this.transform.localPosition.y < 0)
+        {
+            this.rBody.angularVelocity = Vector3.zero;
+            this.rBody.velocity = Vector3.zero;
+            this.transform.localPosition = new Vector3(0, 0.5f, 0);
+        }
+
+        Target.localPosition = new Vector3(Random.value * 8 - 4, 0.5f, Random.value * 8 - 4);
+    }
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(Target.localPosition);
+        sensor.AddObservation(this.transform.localPosition);
+        sensor.AddObservation(rBody.velocity.x);
+        sensor.AddObservation(rBody.velocity.z);
+    }
+    public float forceMultiplier = 10;
+    public override void OnActionReceived(ActionBuffers actionBuffers)
+    {
+        Vector3 controlSignal = Vector3.zero;
+        controlSignal.x = actionBuffers.ContinuousActions[0];
+        controlSignal.z = actionBuffers.ContinuousActions[1];
+        rBody.AddForce(controlSignal * forceMultiplier);
+
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, Target.localPosition);
+
+        if (distanceToTarget < 1.42f)
+        {
+            SetReward(1.0f);
+            EndEpisode();
+        }
+        else if (this.transform.localPosition.y < 0)
+        {
+            EndEpisode();
+        }
+    }
+}
+```
+4. Перемещение внутрь проекта для дальнейшей работы с ним через anaconda
+
+![image](https://user-images.githubusercontent.com/86403364/204565976-c4337795-9731-46c4-a3a0-995ba3639080.png)
+
+5. Запуск обучения
+
+![image](https://user-images.githubusercontent.com/86403364/204566477-b561d589-1b2e-403b-a1d0-fea7ec8df1ce.png)
+
+По итогу фигуры начали двигаться, а конкретно шарики начали кататься в сторону кубов и двигать их
+
+![image](https://user-images.githubusercontent.com/86403364/204591561-9931fa5c-1428-4919-9696-1dbcb3270a4a.png)
+
+
 ## Задание 2
-### Реализовать запись в Google-таблицу набора данных, полученных с помощью линейной регрессии из лабораторной работы № 1. 
+### Описать не менее трех сущностей в играх и интерактивных приложениях, нуждающихся в оптимизации. 
 После слияния кода этой лабораторной работы и лабораторной работы №1 получились такие данные:
 
 ![image](https://user-images.githubusercontent.com/86403364/195134158-41fa54b5-7147-4e83-bd7e-0d7b148c1cc2.png)
