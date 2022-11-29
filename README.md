@@ -8,7 +8,7 @@
 | ------ | ------ | ------ |
 | Задание 1 | * | 60 |
 | Задание 2 | * | 20 |
-| Задание 3 | # | 20 |
+| Задание 3 | * | 20 |
 
 знак "*" - задание выполнено; знак "#" - задание не выполнено;
 
@@ -38,138 +38,33 @@
 Познакомиться с программными средствами для организции передачи данных между инструментами google, Python и Unity
 
 ## Задание 1
-### Реализовать совместную работу и передачу данных в связке Python - Google-Sheets – Unity. 
-1. Подключение API для работы с google sheets и google drive в облачном сервисе google console. 
+### Реализовать систему машинного обучения 
+#### Работа с Anaconda
+1. Создание изолированной виртуальной среды с помощью команды:
 
-![image](https://user-images.githubusercontent.com/86403364/195111061-ec2f2def-7600-4478-998b-22453f4b300f.png)
+![image](https://user-images.githubusercontent.com/86403364/204545008-44194772-9ffd-4156-a0e0-81332191d410.png)
 
-2. Реализация записи данных из скрипта на python в google-таблицу. Данные описывают изменение темпа инфляции на протяжении 11 отсчётных периодов, с учётом стоимости игрового объекта в каждый период
+2. Активация среды с помощью команды:
 
-```py
-import gspread
-import numpy as np
-gc = gspread.service_account(filename = 'unitydatasciense-365119-fb7b148dcd82.json')
-sh = gc.open("UnitySheets")
-price = np.random.randint(2000, 10000, 11)
-mon = list(range(1, 11))
-i = 0
-while i <= len(mon):
-    i += 1
-    if i == 0:
-        continue
-    else:
-        tempInf = ((price[i-1]-price[i-2])/price[i-2])*100
-        tempInf = str(tempInf)
-        tempInf = tempInf.replace('.',',')
-        sh.sheet1.update(('A' + str(i)), str(i))
-        sh.sheet1.update(('B' + str(i)), str(price[i-1]))
-        sh.sheet1.update(('C' + str(i)), str(tempInf))
-        print(tempInf)
-```
+![image](https://user-images.githubusercontent.com/86403364/204545610-51bd2f87-b139-4664-b6ca-cde9acfdc406.png)
 
-![image](https://user-images.githubusercontent.com/86403364/195112486-f95b3ddc-0208-49db-8c9c-dce74c2b7cbd.png)
+3. Установка пакета mlagents:
 
-![image](https://user-images.githubusercontent.com/86403364/195112893-d8c5d85f-3d56-4a6b-8156-4983ce157818.png)
+![image](https://user-images.githubusercontent.com/86403364/204546375-5f09dc8e-934e-47a5-97a6-7e3c97e0bd62.png)
 
-3. Создание нового проекта на Unity, который будет получать данные из google-таблицы, в которую были записаны данные в предыдущем пункте.
+4. Установка torch:
 
-![image](https://user-images.githubusercontent.com/86403364/195113776-361ddfd1-74da-4296-b4a3-dc39eb07b746.png)
+![image](https://user-images.githubusercontent.com/86403364/204549049-fe3af7b8-0848-4078-af15-24ca7b5210f2.png)
 
-4. Написание функционала на Unity, в котором будет воспризводиться аудио-файл в зависимости от значения данных из таблицы.
+5.Создание 3D проекта в Unity:
 
-```cs
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
-using SimpleJSON;
+![image](https://user-images.githubusercontent.com/86403364/204554346-30564ba1-fda2-4a82-8eca-1f553a56da02.png)
 
-public class NewBehaviourScript : MonoBehaviour
-{
-    public AudioClip goodSpeak;
-    public AudioClip normalSpeak;
-    public AudioClip badSpeak;
-    private AudioSource selectAudio;
-    private Dictionary<string, float> dataSet = new Dictionary<string, float>();
-    private bool statusStart = false;
-    private int i = 1;
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(GoogleSheets());
-    }
+6. Добавление пакетов ML Agents в Unity:
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (dataSet["Mon_" + i.ToString()] <= 10 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioGood());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
+![image](https://user-images.githubusercontent.com/86403364/204557577-6a07371a-240d-45fe-9cb4-87a948daaacb.png)
 
-        if (dataSet["Mon_" + i.ToString()] > 10 & dataSet["Mon_" + i.ToString()] < 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioNormal());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-
-        if (dataSet["Mon_" + i.ToString()] >= 100 & statusStart == false & i != dataSet.Count)
-        {
-            StartCoroutine(PlaySelectAudioBad());
-            Debug.Log(dataSet["Mon_" + i.ToString()]);
-        }
-    }
-
-    IEnumerator GoogleSheets()
-    {
-        UnityWebRequest curentResp = UnityWebRequest.Get("https://sheets.googleapis.com/v4/spreadsheets/1Ty5C9fo95n7whrua6TCy2gd6wsz4oMLjQpf5zA2Iq7E/values/List1?key=AIzaSyDx9JxxYDYfFafjaOeSKMRADMh7TZ4rBVU");
-        yield return curentResp.SendWebRequest();
-        string rawResp = curentResp.downloadHandler.text;
-        var rawJson = JSON.Parse(rawResp);
-        foreach(var itemRawJson in rawJson["values"])
-        {
-            var parseJson = JSON.Parse(itemRawJson.ToString());
-            var selectRow = parseJson[0].AsStringList;
-            dataSet.Add(("Mon_" + selectRow[0]), float.Parse(selectRow[2]));
-        }
-    }
-
-    IEnumerator PlaySelectAudioGood()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = goodSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-
-    IEnumerator PlaySelectAudioNormal()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = normalSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(3);
-        statusStart = false;
-        i++;
-    }
-
-    IEnumerator PlaySelectAudioBad()
-    {
-        statusStart = true;
-        selectAudio = GetComponent<AudioSource>();
-        selectAudio.clip = badSpeak;
-        selectAudio.Play();
-        yield return new WaitForSeconds(4);
-        statusStart = false;
-        i++;
-    }
-}
-```
-
+7. 
 ## Задание 2
 ### Реализовать запись в Google-таблицу набора данных, полученных с помощью линейной регрессии из лабораторной работы № 1. 
 После слияния кода этой лабораторной работы и лабораторной работы №1 получились такие данные:
