@@ -38,16 +38,11 @@
 Ознакомиться с основными операторами языка Python на примере реализации линейной регрессии.
 
 ## Задание 1
-### Написать программы Hello World на Python и Unity
-Вывод Hello World на Python через Google Colab(Код автоматически сохраняется на гугл диск)
+### Реализация перцептрона в проекте Unity.
+1. Создание сцены в Unity и добавление кода перцептрона
+![image](https://user-images.githubusercontent.com/86403364/209575771-e3368997-3f15-4c8b-8902-8117aacaf126.png)
 
-![image](https://user-images.githubusercontent.com/86403364/192287954-c934d644-e8ad-4601-aba0-191d07646733.png)
-
-Вывод Hello World на Unity 
-
-![image](https://user-images.githubusercontent.com/86403364/192286751-608b5c63-b918-4834-bbb0-c0feb1ae2c6e.png)
-
-![image](https://user-images.githubusercontent.com/86403364/192242832-3b5d02f0-d7ed-4d83-b902-85ad0576bc9c.png)
+```c
 
 
 
