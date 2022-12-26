@@ -146,18 +146,20 @@ public class Perceptron : MonoBehaviour {
 ```
 
 2. Значения для логического оператора OR(||)
+ 
 ![image](https://user-images.githubusercontent.com/86403364/209576491-743b0e10-67ef-42a4-86ce-ec4f0605d514.png)
 3. Результаты при:
 Train(1).Пока что программа не научилась работать как элемент OR
+
 ![image](https://user-images.githubusercontent.com/86403364/209577076-00d9719e-7903-42b5-a96e-f6d02504bcbc.png)
 
 Train(2). Программа всё еще делает ошибки, но уже ближе к нужному результату
+
 ![image](https://user-images.githubusercontent.com/86403364/209577426-789cbe98-6947-4a32-9b76-7c4a336d2630.png)
 
 Train(4).Начиная с 3й итерации, программа стала давать верный результат
 
 
-ыавпып
 
 
 ## Задание 2
